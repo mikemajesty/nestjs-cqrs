@@ -25,7 +25,7 @@ export class ProductSchema extends BaseEntity {
   description!: string;
 
   @Column('decimal')
-  valeu!: number
+  value!: number
 
   @OneToMany(() => ReviewSchema, (review) => review.product, { cascade: true, onDelete: 'CASCADE' })
   reviews!: Relation<ReviewSchema[]>;

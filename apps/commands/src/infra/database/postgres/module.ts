@@ -16,7 +16,6 @@ import { PostgresService } from './service';
       useFactory: ({ API: { COMMANDS: { DATABASE: { HOST, PORT, USER, PASSWORD, DATABASE } } }, IS_LOCAL }: ISecretsAdapter) => {
         const uri = `postgresql://${USER}:${PASSWORD}@${HOST}:${PORT}/${DATABASE}`
         const conn = new PostgresService().getConnection({ URI: uri });
-        console.log('object', path.join(__dirname, '/schemas/*.{ts,js}'));
         return {
           ...conn,
           timeout: 5000,
