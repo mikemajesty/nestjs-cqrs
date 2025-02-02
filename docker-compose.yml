@@ -1,0 +1,99 @@
+version: '3.1'
+
+services:
+  queries-db:
+    container_name: queries-db
+    image: mongo
+    restart: always
+    volumes:
+      - queries-db-mongo:/data/db
+      - .docker/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - mongo-network-queries-db
+    ports:
+      - '27017:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - MONGO_INITDB_DATABASE=queries-db
+    logging:
+      driver: "none"
+
+  commands-db:
+    container_name: commands-db
+    image: postgres
+    environment:
+      - POSTGRES_HOST=host.docker.internal
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DATABASE=commands-db
+    ports:
+      - '5432:5432'
+    logging:
+      driver: "none"
+    volumes:
+      - commands-db-postgres:/data/postgres
+      - .docker/postgres/create-database.sql:/docker-entrypoint-initdb.d/create-database.sql.sql
+    restart: always
+    networks:
+      - postgres-network-commands-db
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    logging:
+      driver: "none"
+    networks:
+      - kafka-network
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    networks:
+      - kafka-network
+    logging:
+      driver: "none"
+    depends_on:
+      - zookeeper
+    ports:
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKAJS_NO_PARTITIONER_WARNING: 1
+  redpanda-console:
+    container_name: redpanda
+    logging:
+      driver: "none"
+    image: docker.redpanda.com/vectorized/console:latest
+    restart: on-failure
+    entrypoint: /bin/sh
+    command: -c "echo \"$$CONSOLE_CONFIG_FILE\" > /tmp/config.yml; /app/console"
+    ports:
+      - "8081:8080"
+    networks:
+      - kafka-network
+    environment:
+      CONFIG_FILEPATH: /tmp/config.yml
+      CONSOLE_CONFIG_FILE: |
+        kafka:
+          brokers: ["kafka:9092"]
+    depends_on:
+      - "kafka"
+
+volumes:
+  commands-db-postgres:
+  queries-db-mongo:
+networks:
+  mongo-network-queries-db:
+    driver: bridge
+  postgres-network-commands-db:
+    driver: bridge
+  kafka-network:
+    driver: bridge
