@@ -1,34 +1,28 @@
 import { Module } from '@nestjs/common';
-import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductCreateCommand } from '../../core/product/command/product-create';
-import { ProductEntity } from '../../core/product/entity/product';
 import { ProductCreateHandler } from '../../core/product/handler/product-create';
 import { IProductRepository } from '../../core/product/repository/product';
 import { ProductSchema } from '../../infra/database/postgres/schemas/product';
-import { ReviewModule } from '../review/module';
-import { ICommandHandlerAdapter } from './../../../../../utils/command';
-import { ProductRepository } from './repository';
+import { ReviewSchema } from '../../infra/database/postgres/schemas/review';
+import { ReviewRepositoryProviver } from '../review/providers';
+import { ICommandHandler } from './../../../../../utils/command';
+import { ProductRepositoryProviver } from './providers';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ProductSchema]), ReviewModule],
+  imports: [TypeOrmModule.forFeature([ProductSchema, ReviewSchema])],
   controllers: [],
   providers: [
+    ProductRepositoryProviver,
+    ReviewRepositoryProviver,
     {
-      provide: IProductRepository,
-      useFactory: (repository: Repository<ProductSchema & ProductEntity>) => {
-        return new ProductRepository(repository);
-      },
-      inject: [getRepositoryToken(ProductSchema)]
-    },
-    {
-      provide: ICommandHandlerAdapter<ProductCreateCommand>,
+      provide: ICommandHandler<ProductCreateCommand>,
       useFactory(repository: IProductRepository) {
         return new ProductCreateHandler(repository)
       },
       inject: [IProductRepository]
     }
   ],
-  exports: [IProductRepository, ICommandHandlerAdapter<ProductCreateCommand>]
+  exports: [IProductRepository, ICommandHandler<ProductCreateCommand>]
 })
 export class ProductModule {}

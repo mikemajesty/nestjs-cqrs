@@ -1,33 +1,29 @@
-import { ICommandHandlerAdapter } from '@/utils/command';
+import { ICommandHandler } from '@/utils/command';
 import { Module } from '@nestjs/common';
-import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { IProductRepository } from '../../core/product/repository/product';
 import { ReviewCreateCommand } from '../../core/review/command/review-create';
-import { ReviewEntity } from '../../core/review/entity/review';
 import { ReviewCreateHandler } from '../../core/review/handler/review-create';
 import { IReviewRepository } from '../../core/review/repository/review';
+import { ProductSchema } from '../../infra/database/postgres/schemas/product';
 import { ReviewSchema } from '../../infra/database/postgres/schemas/review';
-import { ReviewRepository } from './repository';
+import { ProductRepositoryProviver } from '../product/providers';
+import { ReviewRepositoryProviver } from './providers';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ReviewSchema])],
+  imports: [TypeOrmModule.forFeature([ReviewSchema, ProductSchema])],
   controllers: [],
   providers: [
+    ReviewRepositoryProviver,
+    ProductRepositoryProviver,
     {
-      provide: IReviewRepository,
-      useFactory: (repository: Repository<ReviewSchema & ReviewEntity>) => {
-        return new ReviewRepository(repository);
+      provide: ICommandHandler<ReviewCreateCommand>,
+      useFactory(repository: IReviewRepository, productRepository: IProductRepository) {
+        return new ReviewCreateHandler(repository, productRepository)
       },
-      inject: [getRepositoryToken(ReviewSchema)]
-    },
-    {
-      provide: ICommandHandlerAdapter<ReviewCreateCommand>,
-      useFactory(repository: IReviewRepository) {
-        return new ReviewCreateHandler(repository)
-      },
-      inject: [IReviewRepository]
+      inject: [IReviewRepository, IProductRepository]
     }
   ],
-  exports: [IReviewRepository, ICommandHandlerAdapter<ReviewCreateCommand>]
+  exports: [IReviewRepository, ICommandHandler<ReviewCreateCommand>]
 })
 export class ReviewModule {}

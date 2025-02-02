@@ -1,12 +1,12 @@
 
 
-import { ICommandAdapter } from '@/utils/command';
+import { ICommand } from '@/utils/command';
 import { z } from 'zod';
 import { ProductEntitySchema } from '../entity/product';
 
 export const ProductCreateInputSchema = ProductEntitySchema.pick({ imageUrl: true, name: true, description: true, value: true })
 
-export class ProductCreateCommand implements ProductCreateInput, ICommandAdapter {
+export class ProductCreateCommand implements ProductCreateInput, ICommand {
   imageUrl!: string;
 
   name!: string;

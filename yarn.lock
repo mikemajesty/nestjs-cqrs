@@ -1452,6 +1452,13 @@
   resolved "https://registry.npmjs.org/@nestjs/cqrs/-/cqrs-11.0.0.tgz"
   integrity sha512-AD4WblJaXVm9n6x1Dy9S/eltqM64U8JqJLgouxyB60cbM+bgWbljKJIS9YLr72V5FhiM6A/IrfbV0YCxsQykpA==
 
+"@nestjs/event-emitter@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/@nestjs/event-emitter/-/event-emitter-3.0.0.tgz"
+  integrity sha512-WbvzQQ9BGnj27onh2qSLND2+4iA6Pfp4K+HLlqunB0Uz0614O8lGMtcveSss2IOxsox8EhSI54WAvuAsDrX1hA==
+  dependencies:
+    eventemitter2 "6.4.9"
+
 "@nestjs/mapped-types@2.1.0":
   version "2.1.0"
   resolved "https://registry.npmjs.org/@nestjs/mapped-types/-/mapped-types-2.1.0.tgz"
@@ -4649,6 +4656,11 @@ event-target-shim@^5.0.0:
   version "5.0.1"
   resolved "https://registry.npmjs.org/event-target-shim/-/event-target-shim-5.0.1.tgz"
   integrity sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==
+
+eventemitter2@6.4.9:
+  version "6.4.9"
+  resolved "https://registry.npmjs.org/eventemitter2/-/eventemitter2-6.4.9.tgz"
+  integrity sha512-JEPTiaOt9f04oa6NOkc4aH+nVp5I3wEjpHbIPqfgCdD5v5bUzy7xQqwcVO2aDQgOWhI28da57HksMrzK9HlRxg==
 
 events@^3.2.0, events@^3.3.0:
   version "3.3.0"

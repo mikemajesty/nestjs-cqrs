@@ -1,12 +1,12 @@
 
 
-import { ICommandHandlerAdapter } from '@/utils/command';
+import { ICommandHandler } from '@/utils/command';
 import { ValidateSchema } from '@/utils/decorators';
 import { ProductCreateCommand, ProductCreateInputSchema } from '../command/product-create';
 import { ProductEntity } from '../entity/product';
 import { IProductRepository } from '../repository/product';
 
-export class ProductCreateHandler implements ICommandHandlerAdapter<ProductCreateCommand> {
+export class ProductCreateHandler implements ICommandHandler<ProductCreateCommand> {
   constructor(private readonly productRepository: IProductRepository) {}
 
   @ValidateSchema(ProductCreateInputSchema)
