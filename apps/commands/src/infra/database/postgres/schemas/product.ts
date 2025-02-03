@@ -24,10 +24,10 @@ export class ProductSchema extends BaseEntity {
   @Column('text')
   description!: string;
 
-  @Column('decimal')
+  @Column('int')
   value!: number
 
-  @OneToMany(() => ReviewSchema, (review) => review.product, { cascade: true, onDelete: 'CASCADE' })
+  @OneToMany(() => ReviewSchema, (review) => review.product, { cascade: true, onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   reviews!: Relation<ReviewSchema[]>;
 
   @CreateDateColumn()

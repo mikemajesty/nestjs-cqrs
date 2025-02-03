@@ -21,7 +21,7 @@ export class ReviewSchema extends BaseEntity {
   @UpdateDateColumn()
   updatedAt!: Date;
 
-  @ManyToOne(() => ProductSchema, (product) => product.reviews)
+  @ManyToOne(() => ProductSchema, (product) => product.reviews, { onDelete: 'CASCADE' })
   product!: Relation<ProductSchema>;
 
   @DeleteDateColumn({ nullable: true })

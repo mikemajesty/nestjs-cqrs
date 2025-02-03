@@ -9,7 +9,7 @@ const ID = z.string().uuid().optional();
 const ImageUrl = z.string().url()
 const Name = z.string().min(1).trim()
 const Description = z.string().trim().optional()
-const Value = z.number()
+const Value = z.number().or(z.string()).transform(v => Number(v))
 const Reviews = z.array(ReviewEntitySchema)
 
 const CreatedAt = z.date().or(z.string()).nullish().optional();
