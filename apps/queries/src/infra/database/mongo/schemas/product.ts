@@ -7,7 +7,7 @@ import { Review } from './review';
 export type ProductDocument = Document & ProductEntity;
 
 @Schema({
-  collection: 'cats',
+  collection: 'products',
   autoIndex: true,
   timestamps: true
 })
@@ -27,7 +27,7 @@ export class Product {
   @Prop({ type: Number })
   value!: number
 
-  @Prop({ type: Array<Review> })
+  @Prop({ type: Array<Review>, default: [], required: false })
   reviews!: Review[];
 
   @Prop({ type: Date, default: null })

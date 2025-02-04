@@ -1,5 +1,6 @@
-import { ProductEntity } from '@/apps/commands/src/core/product/entity/product';
 import { z } from 'zod';
+import { ReviewEntity } from '../../review/entity/review';
+import { ProductEntity } from './product';
 
 export enum DomainEvent {
   PRODUCT_CREATED = 'PRODUCT_CREATED',
@@ -21,7 +22,7 @@ type Event = z.infer<typeof EventEntitySchema>;
 export class EventEntity {
   event!: DomainEvent
 
-  payload!: ProductEntity
+  payload!: ProductEntity | ReviewEntity | string
 
   constructor(entity: Event) {
     Object.assign(this, EventEntitySchema.parse(entity));

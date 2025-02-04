@@ -1,12 +1,12 @@
+import { ProductEntity } from '@/apps/commands/src/core/product/entity/product';
 import { z } from 'zod';
 
-import { ProductEntity } from '../../product/entity/product';
 
 const ID = z.string().uuid().optional();
 
 const User = z.string().min(1).trim()
 const Rating = z.number().min(0).max(5)
-const Product = z.unknown()
+const Product = z.string().uuid().or(z.any())
 
 const CreatedAt = z.date().or(z.string()).nullish().optional().optional();
 const UpdatedAt = z.date().or(z.string()).nullish().optional();
@@ -16,7 +16,7 @@ export const ReviewEntitySchema = z.object({
   id: ID,
   user: User,
   rating: Rating,
-  product: Product,
+  productId: Product,
   createdAt: CreatedAt,
   updatedAt: UpdatedAt,
   deletedAt: DeletedAt,
@@ -25,12 +25,11 @@ export const ReviewEntitySchema = z.object({
 type Review = z.infer<typeof ReviewEntitySchema>;
 
 export class ReviewEntity {
-
   user!: string
 
   rating!: number
 
-  product!: ProductEntity
+  productId!: string | ProductEntity
 
   createdAt!: Date
 
