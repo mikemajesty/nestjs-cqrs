@@ -3,6 +3,7 @@ import { ClientKafka } from '@nestjs/microservices';
 
 import { ILoggerAdapter } from '@/infra/logger';
 
+import { EventEntity } from '../../core/product/entity/event';
 import { IKafkaAdapter } from '../kafka/adapter';
 import { IProducerAdapter } from './adapter';
 
@@ -17,10 +18,10 @@ export class ProducerService implements IProducerAdapter {
     this.client = kafka.client;
   }
 
-  async publish<T>(payload: T, topic: string): Promise<void> {
+  async publish(topic: string, input: EventEntity): Promise<void> {
     return new Promise((res) => {
       this.client
-        .emit<string, string>(topic, JSON.stringify(payload))
+        .emit<string, string>(topic, JSON.stringify(input))
         .subscribe({
           error: (error) => {
             res(error);

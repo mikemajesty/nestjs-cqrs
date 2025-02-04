@@ -1,5 +1,6 @@
 import { ErrorType, ILoggerAdapter } from '@/infra/logger';
 import { ISecretsAdapter } from '@/infra/secrets';
+import { ProductTopics } from '@/utils/topics';
 import { RequestMethod, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
@@ -44,7 +45,7 @@ async function bootstrap() {
       subscribe: {
         fromBeginning: true,
       },
-      run: { autoCommit: false },
+      run: { autoCommit: true },
     },
   });
 
@@ -76,7 +77,12 @@ async function bootstrap() {
   const admin = kafka.admin();
   await admin.connect();
   await admin.createTopics({
-    topics: [],
+    topics: [{
+      topic: ProductTopics.PROCCESS_COMMAND_QUERY,
+      numPartitions: 1,
+      replicationFactor: 1,
+    },
+    ],
     waitForLeaders: true,
   });
 

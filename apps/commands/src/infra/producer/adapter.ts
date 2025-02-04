@@ -1,6 +1,7 @@
 import { ClientKafka } from '@nestjs/microservices';
+import { EventEntity } from '../../core/product/entity/event';
 
 export abstract class IProducerAdapter {
   client!: ClientKafka;
-  abstract publish<T>(payload: T, topic: string): Promise<void>;
+  abstract publish(topic: string, input: EventEntity): Promise<void>;
 }

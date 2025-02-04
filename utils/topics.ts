@@ -1,0 +1,3 @@
+export enum ProductTopics {
+  PROCCESS_COMMAND_QUERY = 'PROCCESS_COMMAND_QUERY'
+}

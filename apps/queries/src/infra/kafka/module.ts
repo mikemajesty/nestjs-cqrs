@@ -22,11 +22,11 @@ import { KafkaService } from './service';
               transport: Transport.KAFKA,
               options: {
                 client: {
-                  clientId: secret.API.COMMANDS.KAFKA.CLIENT_ID,
+                  clientId: secret.API.QUERIES.KAFKA.CLIENT_ID,
                   brokers: [secret.KAFKA_BROKER],
                 },
                 consumer: {
-                  groupId: secret.API.COMMANDS.KAFKA.GROUP_ID
+                  groupId: secret.API.QUERIES.KAFKA.GROUP_ID
                 },
                 run: { autoCommit: true },
               },

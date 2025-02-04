@@ -15,14 +15,20 @@ export class ReviewSchema extends BaseEntity {
   @Column({ type: 'uuid', primary: true })
   id!: string;
 
+  @Column({ type: 'int' })
+  rating!: number;
+
+  @Column({ type: 'varchar' })
+  user!: number;
+
+  @ManyToOne(() => ProductSchema, (product) => product.reviews, { onDelete: 'CASCADE' })
+  product!: Relation<ProductSchema>;
+
   @CreateDateColumn()
   createdAt!: Date;
 
   @UpdateDateColumn()
   updatedAt!: Date;
-
-  @ManyToOne(() => ProductSchema, (product) => product.reviews, { onDelete: 'CASCADE' })
-  product!: Relation<ProductSchema>;
 
   @DeleteDateColumn({ nullable: true })
   deletedAt!: Date;

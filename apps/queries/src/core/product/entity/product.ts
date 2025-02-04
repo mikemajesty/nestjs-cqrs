@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-import { BaseEntity } from '@/utils/entity';
 import { ReviewEntity, ReviewEntitySchema } from '../../review/entity/review';
 
 const ID = z.string().uuid().optional();
@@ -29,7 +28,9 @@ export const ProductEntitySchema = z.object({
 
 type Product = z.infer<typeof ProductEntitySchema>;
 
-export class ProductEntity extends BaseEntity<ProductEntity>() {
+export class ProductEntity {
+  id!: string
+
   imageUrl!: string
 
   name!: string
@@ -40,8 +41,13 @@ export class ProductEntity extends BaseEntity<ProductEntity>() {
 
   reviews?: ReviewEntity[]
 
+  createdAt!: Date
+
+  updatedAt!: Date
+
+  deletedAt?: Date | null
+
   constructor(entity: Product) {
-    super(ProductEntitySchema);
-    Object.assign(this, this.validate(entity));
+    Object.assign(this, ProductEntitySchema.parse(entity));
   }
 }
